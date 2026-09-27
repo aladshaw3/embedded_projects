@@ -1,0 +1,4 @@
+leak:dyld4
+leak:dyld3
+leak:libclang_rt.lsan_osx_dynamic.dylib
+leak:libclang_rt.asan_osx_dynamic.dylib

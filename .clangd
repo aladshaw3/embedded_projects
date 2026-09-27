@@ -1,0 +1,5 @@
+CompileFlags:
+  CompilationDatabase: ./sil++/UnitTests/Build/UnitTests
+  Remove: [-mcpu*, -mfpu*, -mno-unaligned-access, -mfloat-abi*]
+  Add: [-ferror-limit=0, -DGTEST]
+  Compiler: clang++

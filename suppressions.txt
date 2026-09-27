@@ -1,0 +1,8 @@
+missingInclude
+# cppcheck + googletest is broken
+syntaxError
+unmatchedSuppresion
+unusedStructMember
+checkersReport
+unknownMacro
+normalCheckLevelMaxBranches
