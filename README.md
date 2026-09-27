@@ -1,4 +1,6 @@
-## embedded_projects
+[![Checks](https://github.com/aladshaw3/embedded_projects/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/aladshaw3/embedded_projects/actions/workflows/build-and-test.yml)
+
+## Personal Embedded Projects
 Mono Repo for various personal embedded projects with my husband
 
 This mono repo is strictly just for code development with a lot of boilerplate for helping

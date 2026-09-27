@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '30 5 * * 5'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@main
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      shell: bash -l {0}
+      run: |
+        make environment
+
+    - name: Run Linter
+      shell: bash -l {0}
+      run: |
+        make lint-filename
+
+    - name: Run Pre-Commit
+      shell: bash -l {0}
+      run: |
+        make pre-commit
+
+    - name: Run Unit Tests
+      shell: bash -l {0}
+      run: |
+        make unit-tests
+
+    - name: Run Static Code Analysis
+      shell: bash -l {0}
+      run: |
+        make static-code-analysis
+
+    - name: Build the docs
+      shell: bash -l {0}
+      run: |
+        make api-docs
