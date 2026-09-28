@@ -7,9 +7,6 @@
 [submodule "libraries/csvstream"]
 	path = libraries/csvstream
 	url = https://github.com/awdeorio/csvstream.git
-[submodule "libraries/cmake-modules"]
-	path = libraries/cmake-modules
-	url = https://github.com/aladshaw3/cmake-modules.git
 [submodule "libraries/etl"]
 	path = libraries/etl
 	url = https://github.com/ETLCPP/etl.git

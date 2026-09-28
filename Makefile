@@ -50,7 +50,7 @@ grab-submodules:
 	git submodule add https://gitlab.com/libeigen/eigen.git libraries/eigen
 	git submodule add https://github.com/google/googletest.git libraries/googletest
 	git submodule add https://github.com/awdeorio/csvstream.git libraries/csvstream
-	git submodule add https://github.com/bilke/cmake-modules.git libraries/cmake-modules
+	git submodule add https://github.com/aladshaw3/cmake-modules.git libraries/cmake-modules
 	git submodule add https://github.com/ETLCPP/etl.git libraries/etl
 
 .PHONY: environment
