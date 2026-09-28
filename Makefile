@@ -50,7 +50,7 @@ grab-submodules:
 	git submodule add https://gitlab.com/libeigen/eigen.git libraries/eigen
 	git submodule add https://github.com/google/googletest.git libraries/googletest
 	git submodule add https://github.com/awdeorio/csvstream.git libraries/csvstream
-	git submodule add https://github.com/bilke/cmake-modules.git libraries/cmake-modules
+	git submodule add https://github.com/aladshaw3/cmake-modules.git libraries/cmake-modules
 	git submodule add https://github.com/ETLCPP/etl.git libraries/etl
 
 .PHONY: environment
@@ -107,6 +107,11 @@ unit-test:
 .PHONY: gdb-unit-test
 gdb-unit-test: gdb-unit-tests-rebuild
 	@$(MAKE) -C build -f common.mk gdb-test TEST=$(TEST) TOOLCHAIN_PATH=${LLVM_PATH} BUILD_TYPE=${BUILD_TYPE} ENABLE_SANITIZERS=ON ANALYZE_ADDRESS=ON ANALYZE_LEAK=ON LSAN_OPTIONS=suppressions=../../../SanitizerSuppression.supp
+
+.PHONY: unit-test-coverage
+unit-test-coverage:
+	@echo "Generating unit test coverage report"
+	@$(MAKE) -C build -f common.mk unit-test-coverage TOOLCHAIN_PATH=${LLVM_PATH} BUILD_TYPE=${BUILD_TYPE}
 
 ## Documentation ##
 .PHONY: api-docs
