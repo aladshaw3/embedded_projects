@@ -108,6 +108,11 @@ unit-test:
 gdb-unit-test: gdb-unit-tests-rebuild
 	@$(MAKE) -C build -f common.mk gdb-test TEST=$(TEST) TOOLCHAIN_PATH=${LLVM_PATH} BUILD_TYPE=${BUILD_TYPE} ENABLE_SANITIZERS=ON ANALYZE_ADDRESS=ON ANALYZE_LEAK=ON LSAN_OPTIONS=suppressions=../../../SanitizerSuppression.supp
 
+.PHONY: unit-test-coverage
+unit-test-coverage:
+	@echo "Generating unit test coverage report"
+	@$(MAKE) -C build -f common.mk unit-test-coverage TOOLCHAIN_PATH=${LLVM_PATH} BUILD_TYPE=${BUILD_TYPE}
+
 ## Documentation ##
 .PHONY: api-docs
 api-docs:

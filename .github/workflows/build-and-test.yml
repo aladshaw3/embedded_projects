@@ -47,3 +47,15 @@ jobs:
       shell: bash -l {0}
       run: |
         make api-docs
+
+    - name: Run Code Coverage Analysis
+      shell: bash -l {0}
+      run: |
+        make unit-test-coverage
+
+    - name: Upload Code Coverage
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: projects/UnitTests/Build/UnitTests/UnitTests_coverage.info
+        fail_ci_if_error: true

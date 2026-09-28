@@ -95,7 +95,7 @@ function create_build()
 
     if [ "${enable_test_coverage}" = "ON" ]; then
         # The following is used to override the GCOV_PATH in bilke-cmake-modules/CodeCoverage.cmake
-        cmake_args="${cmake_args} -DGCOV_PATH=${WORKDIR}/../bin/llvm-gcov"
+        cmake_args="${cmake_args} -DGCOV_PATH=${WORKDIR}/../../build/llvm-gcov"
     fi
 
     # Check if we want to run the build on ubuntu

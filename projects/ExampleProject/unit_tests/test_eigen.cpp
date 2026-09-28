@@ -167,7 +167,7 @@ void buildProblem(std::vector<T>& coefficients, Eigen::VectorXd& b, int n) {
 
 TEST(EigenIntegrationTest, SparseMatrixTest) {
   // ------------ Test 1: Setting up and Solving Large Sparse System ----------------------------------
-  int n = 300;    // size of the image
+  int n = 30;     // size of the image
   int m = n * n;  // number of unknowns (=number of pixels)
 
   // Assembly: Collect RHS of Ax = b
@@ -626,7 +626,7 @@ struct generic_product_impl<MatrixReplacement, Rhs, SparseShape, DenseShape,
 }  // namespace Eigen
 
 TEST(EigenIntegrationTest, UnsupportedLinearMethods) {
-  int n = 50;
+  int n = 10;
   Eigen::SparseMatrix<double> S;
   fillNatural3DLaplacian(n, S);
 

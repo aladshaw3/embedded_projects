@@ -1,4 +1,6 @@
 [![Checks](https://github.com/aladshaw3/embedded_projects/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/aladshaw3/embedded_projects/actions/workflows/build-and-test.yml)
+[![codecov](https://codecov.io/gh/aladshaw3/embedded_projects/branch/main/graph/badge.svg)](https://codecov.io/gh/aladshaw3/embedded_projects)
+
 
 ## Personal Embedded Projects
 Mono Repo for various personal embedded projects with my husband

@@ -131,12 +131,15 @@ if(ENABLE_TEST_COVERAGE
      MATCHES
      TRUE)
     # cmake-format: off
+    # cmake-lint: disable=C0301
     setup_target_for_coverage_lcov(
       NAME ${APPLICATION_NAME}_coverage
       EXECUTABLE ${APPLICATION_NAME} -j ${PROCESSOR_COUNT}
       DEPENDENCIES ${APPLICATION_NAME}
-      EXCLUDE "../Libraries/*" "googletest/*" "/usr/include/c++/*"
-      "${LIBRARIES_DIR}/*")
+      EXCLUDE "${LIBRARIES_DIR}/*" "/usr/include/c++/*"
+      "${LIBRARIES_DIR}/*"
+      LCOV_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors unused
+      GENHTML_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors category)
     # cmake-format: on
   else()
     # cmake-format: off
@@ -145,7 +148,7 @@ if(ENABLE_TEST_COVERAGE
       NAME ${APPLICATION_NAME}_coverage
       EXECUTABLE ${APPLICATION_NAME} -j ${PROCESSOR_COUNT}
       DEPENDENCIES ${APPLICATION_NAME}
-      EXCLUDE "../Libraries/*" "googletest/*" "/Library/*" "/opt/*" "/Applications/*" "${LIBRARIES_DIR}/*"
+      EXCLUDE "/Library/*" "/opt/*" "/Applications/*" "${LIBRARIES_DIR}/*"
       LCOV_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors unused
       GENHTML_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors category)
     # cmake-format: on
