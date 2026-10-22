@@ -1,5 +1,7 @@
 #pragma once
-#include "esphome.h"
+#include "esphome/core/component.h"
+#include "esphome/components/sensor/sensor.h"
+#include "esphome/components/i2c/i2c.h"
 #include "esphome/core/application.h"
 
 extern "C" {
@@ -14,7 +16,7 @@ static const char *const TAG = "vl53l4cd";
 
 class VL53L4CDComponent : public PollingComponent, public i2c::I2CDevice, public sensor::Sensor {
  public:
-  VL53L4CDComponent() : PollingComponent(250) {}
+  VL53L4CDComponent() = default;
 
   void setup() override {
     ESP_LOGI(TAG, "Starting VL53L4CD setup...");
@@ -52,7 +54,6 @@ class VL53L4CDComponent : public PollingComponent, public i2c::I2CDevice, public
   }
 
   void update() override {
-    
     Dev_t dev = this;
     uint8_t ready = 0;
 
@@ -71,7 +72,6 @@ class VL53L4CDComponent : public PollingComponent, public i2c::I2CDevice, public
         this->publish_state(distance_m);
       }
     }
-    
   }
 };
 
