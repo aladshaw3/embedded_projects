@@ -113,42 +113,18 @@ light:
   - platform: esp32_rmt_led_strip
     pin: GPIO0
     num_leds: 1
-    rgb_order: GRB
+    channel_colors: GRB  # Replaced deprecated 'rgb_order'
     chipset: WS2812
     name: "Feather RGB LED"
     id: feather_rgb_led
 
-interval:
-  - interval: 250ms
-    then:
-      - lambda: |-
-          float voltage = id(ina228_voltage).has_state() ? id(ina228_voltage).state : 0.0f;
-          float current = id(ina228_current).has_state() ? id(ina228_current).state : 0.0f;
-          float power   = id(ina228_power).has_state() ? id(ina228_power).state : 0.0f;
-          bool d14_val  = id(pin_14_state).state;
-          float a0_val  = id(a0_voltage).has_state() ? id(a0_voltage).state : 0.0f;
-
-          // Scale Green brightness from A0 voltage (0V to 3.3V)
-          float green_brightness = std::min(1.0f, std::max(0.0f, a0_val / 3.3f));
-
-          float red = d14_val ? 1.0f : 0.0f;
-          float green = green_brightness;
-          float blue = 0.0f;
-
-          auto call = id(feather_rgb_led).turn_on();
-          call.set_rgb(red, green, blue);
-          call.set_brightness(0.3f);
-          call.set_transition_length(0);
-          call.perform();
-
-          if (id(vl53l4cd_distance).has_state()) {
-            float dist_m = id(vl53l4cd_distance).state;
-            int dist_mm = static_cast<int>(dist_m * 1000.0f);
-            ESP_LOGI("sensor_summary", 
-                     "Dist: %.3fm (%dmm) | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s",
-                     dist_m, dist_mm, voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
-          } else {
-            ESP_LOGI("sensor_summary", 
-                     "Dist: [Wait] | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s",
-                     voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
-          }
+cat_feeder_logic:
+  id: feeder_logic
+  distance_sensor: vl53l4cd_distance
+  bus_voltage_sensor: ina228_voltage
+  current_sensor: ina228_current
+  power_sensor: ina228_power
+  analog_sensor: a0_voltage
+  digital_sensor: pin_14_state
+  display: seven_seg
+  status_light: feather_rgb_led
