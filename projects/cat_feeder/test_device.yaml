@@ -62,7 +62,26 @@ sensor:
     name: "A0 Analog Voltage"
     update_interval: 250ms
     attenuation: 12dB
-
+  - platform: nau7802_fixed
+    id: gross_scale
+    name: "Gross Scale"
+    gain: 1
+    ldo_voltage: "3.0V"
+    update_interval: 3s
+    filters:
+    - sliding_window_moving_average:
+        window_size: 20
+        send_every: 10
+    - calibrate_linear:
+        method: least_squares
+        datapoints:
+          - 1478-> 0
+          - 3019 -> 831
+          - 4850 -> 1819
+          - 1540 -> 33
+          - 2189 -> 383
+          - 5622 -> 2235
+    unit_of_measurement: g
 display:
   - platform: ht16k33_alpha
     id: seven_seg
