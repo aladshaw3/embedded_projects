@@ -12,7 +12,7 @@ external_components:
       path: custom_components
 
 logger:
-  level: DEBUG
+  level: INFO
   baud_rate: 115200
 
 i2c:
@@ -21,15 +21,23 @@ i2c:
   scan: true
   frequency: 50kHz
 
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode:
+        input: true
+        pullup: true
+    id: pin_14_state
+    name: "Digital Pin 14"
+
 sensor:
-  # --- VL53L4CD Component ---
   - platform: vl53l4cd
     id: vl53l4cd_distance
     name: "VL53L4CD Distance"
     address: 0x29
     update_interval: 250ms
 
-  # --- INA228 Component ---
   - platform: ina2xx_i2c
     id: my_charge_sensor
     model: INA228
@@ -48,6 +56,26 @@ sensor:
       id: ina228_power
       name: "INA228 Power"
 
+  - platform: adc
+    pin: GPIO26
+    id: a0_voltage
+    name: "A0 Analog Voltage"
+    update_interval: 250ms
+    attenuation: 12dB
+
+display:
+  - platform: ht16k33_alpha
+    id: seven_seg
+    address: 0x70
+    update_interval: 50ms
+    lambda: |-
+      if (id(vl53l4cd_distance).has_state()) {
+        int dist_mm = static_cast<int>(id(vl53l4cd_distance).state * 1000.0f);
+        it.printf("%4d", dist_mm);
+      } else {
+        it.print("----");
+      }
+
 interval:
   - interval: 250ms
     then:
@@ -55,14 +83,17 @@ interval:
           float voltage = id(ina228_voltage).has_state() ? id(ina228_voltage).state : 0.0f;
           float current = id(ina228_current).has_state() ? id(ina228_current).state : 0.0f;
           float power   = id(ina228_power).has_state() ? id(ina228_power).state : 0.0f;
+          bool d14_val  = id(pin_14_state).state;
+          float a0_val  = id(a0_voltage).has_state() ? id(a0_voltage).state : 0.0f;
 
           if (id(vl53l4cd_distance).has_state()) {
             float dist_m = id(vl53l4cd_distance).state;
+            int dist_mm = static_cast<int>(dist_m * 1000.0f);
             ESP_LOGI("sensor_summary", 
-                     "Distance: %.3f m | Voltage: %.3f V | Current: %.3f A | Power: %.3f W",
-                     dist_m, voltage, current, power);
+                     "Dist: %.3fm (%dmm) | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s",
+                     dist_m, dist_mm, voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
           } else {
             ESP_LOGI("sensor_summary", 
-                     "Distance: [Waiting...] | Voltage: %.3f V | Current: %.3f A | Power: %.3f W",
-                     voltage, current, power);
+                     "Dist: [Wait] | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s",
+                     voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
           }
