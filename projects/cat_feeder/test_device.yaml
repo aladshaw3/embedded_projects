@@ -26,6 +26,16 @@ switch:
     id: neopixel_power
     name: "NeoPixel Power"
     restore_mode: ALWAYS_ON
+  - platform: gpio
+    pin: GPIO13
+    id: pin_13_state
+    name: "Digital Pin 13"
+    restore_mode: ALWAYS_OFF
+  - platform: gpio
+    pin: GPIO27
+    id: pin_27_state
+    name: "Digital Pin 27"
+    restore_mode: ALWAYS_ON
 
 i2c:
   sda: GPIO22
@@ -42,6 +52,21 @@ binary_sensor:
         pullup: true
     id: pin_14_state
     name: "Digital Pin 14"
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode:
+        input: true
+        pullup: false
+    id: pin_32_state
+    name: "Digital Pin 32"
+    on_press:
+      then:
+        - switch.turn_on: pin_13_state
+        - switch.turn_off: pin_27_state
+        - delay: 5s
+        - switch.turn_off: pin_13_state
+        - switch.turn_on: pin_27_state
 
 sensor:
   - platform: vl53l4cd
