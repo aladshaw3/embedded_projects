@@ -12,6 +12,7 @@ CONF_CURRENT_SENSOR = "current_sensor"
 CONF_POWER_SENSOR = "power_sensor"
 CONF_ANALOG_SENSOR = "analog_sensor"
 CONF_DIGITAL_SENSOR = "digital_sensor"
+CONF_WEIGHT_SENSOR = "weight_sensor"  # <--- Added
 CONF_DISPLAY = "display"
 CONF_STATUS_LIGHT = "status_light"
 
@@ -23,7 +24,8 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Required(CONF_POWER_SENSOR): cv.use_id(sensor.Sensor),
     cv.Required(CONF_ANALOG_SENSOR): cv.use_id(sensor.Sensor),
     cv.Required(CONF_DIGITAL_SENSOR): cv.use_id(binary_sensor.BinarySensor),
-    cv.Required(CONF_DISPLAY): cv.use_id(cg.Component),  # Accepts any Component, including HT16K33AlphaDisplay
+    cv.Required(CONF_WEIGHT_SENSOR): cv.use_id(sensor.Sensor),  # <--- Added
+    cv.Required(CONF_DISPLAY): cv.use_id(cg.Component),
     cv.Required(CONF_STATUS_LIGHT): cv.use_id(light.LightState),
 }).extend(cv.COMPONENT_SCHEMA)
 
@@ -48,6 +50,9 @@ async def to_code(config):
 
     dig = await cg.get_variable(config[CONF_DIGITAL_SENSOR])
     cg.add(var.set_digital_sensor(dig))
+
+    weight = await cg.get_variable(config[CONF_WEIGHT_SENSOR])  # <--- Added
+    cg.add(var.set_weight_sensor(weight))
 
     disp = await cg.get_variable(config[CONF_DISPLAY])
     cg.add(var.set_display(disp))

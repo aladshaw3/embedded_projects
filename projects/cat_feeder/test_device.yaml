@@ -151,5 +151,6 @@ cat_feeder_logic:
   power_sensor: ina228_power
   analog_sensor: a0_voltage
   digital_sensor: pin_14_state
+  weight_sensor: gross_scale
   display: seven_seg
   status_light: feather_rgb_led
