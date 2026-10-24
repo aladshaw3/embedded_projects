@@ -1,5 +1,9 @@
 esphome:
   name: vl53l4cd-test
+  on_boot:
+    priority: 800.0
+    then:
+      - switch.turn_on: neopixel_power
 
 esp32:
   board: featheresp32
@@ -14,6 +18,14 @@ external_components:
 logger:
   level: INFO
   baud_rate: 115200
+
+# --- Feather ESP32 V2 Power Gate for NeoPixel ---
+switch:
+  - platform: gpio
+    pin: GPIO2
+    id: neopixel_power
+    name: "NeoPixel Power"
+    restore_mode: ALWAYS_ON
 
 i2c:
   sda: GPIO22
@@ -62,6 +74,7 @@ sensor:
     name: "A0 Analog Voltage"
     update_interval: 250ms
     attenuation: 12dB
+
   - platform: nau7802_fixed
     id: gross_scale
     name: "Gross Scale"
@@ -69,24 +82,25 @@ sensor:
     ldo_voltage: "3.0V"
     update_interval: 3s
     filters:
-    - sliding_window_moving_average:
-        window_size: 20
-        send_every: 10
-    - calibrate_linear:
-        method: least_squares
-        datapoints:
-          - 1478-> 0
-          - 3019 -> 831
-          - 4850 -> 1819
-          - 1540 -> 33
-          - 2189 -> 383
-          - 5622 -> 2235
+      - sliding_window_moving_average:
+          window_size: 20
+          send_every: 10
+      - calibrate_linear:
+          method: least_squares
+          datapoints:
+            - 1478 -> 0
+            - 3019 -> 831
+            - 4850 -> 1819
+            - 1540 -> 33
+            - 2189 -> 383
+            - 5622 -> 2235
     unit_of_measurement: g
+
 display:
   - platform: ht16k33_alpha
     id: seven_seg
     address: 0x70
-    update_interval: 50ms
+    update_interval: 250ms
     lambda: |-
       if (id(vl53l4cd_distance).has_state()) {
         int dist_mm = static_cast<int>(id(vl53l4cd_distance).state * 1000.0f);
@@ -94,6 +108,15 @@ display:
       } else {
         it.print("----");
       }
+
+light:
+  - platform: esp32_rmt_led_strip
+    pin: GPIO0
+    num_leds: 1
+    rgb_order: GRB
+    chipset: WS2812
+    name: "Feather RGB LED"
+    id: feather_rgb_led
 
 interval:
   - interval: 250ms
@@ -104,6 +127,19 @@ interval:
           float power   = id(ina228_power).has_state() ? id(ina228_power).state : 0.0f;
           bool d14_val  = id(pin_14_state).state;
           float a0_val  = id(a0_voltage).has_state() ? id(a0_voltage).state : 0.0f;
+
+          // Scale Green brightness from A0 voltage (0V to 3.3V)
+          float green_brightness = std::min(1.0f, std::max(0.0f, a0_val / 3.3f));
+
+          float red = d14_val ? 1.0f : 0.0f;
+          float green = green_brightness;
+          float blue = 0.0f;
+
+          auto call = id(feather_rgb_led).turn_on();
+          call.set_rgb(red, green, blue);
+          call.set_brightness(0.3f);
+          call.set_transition_length(0);
+          call.perform();
 
           if (id(vl53l4cd_distance).has_state()) {
             float dist_m = id(vl53l4cd_distance).state;
