@@ -120,4 +120,3 @@ Type: uint8
 Type: uint8
 ### B
 Type: uint8
-
