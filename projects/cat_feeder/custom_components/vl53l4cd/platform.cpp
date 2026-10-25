@@ -1,10 +1,11 @@
 #include "platform.h"
-#include "vl53l4cd.h"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "vl53l4cd.h"
 
 // Cast generic dev handle to ESPHome I2CDevice pointer
-#define COMPONENT ((esphome::vl53l4cd::VL53L4CDComponent*) dev)
+#define COMPONENT ((esphome::vl53l4cd::VL53L4CDComponent *)dev)
 
 extern "C" {
 
@@ -21,12 +22,8 @@ uint8_t VL53L4CD_WrWord(Dev_t dev, uint16_t index, uint16_t data) {
 
 uint8_t VL53L4CD_WrDWord(Dev_t dev, uint16_t index, uint32_t data) {
   if (dev == nullptr) return 1;
-  uint8_t buf[4] = {
-      static_cast<uint8_t>(data >> 24),
-      static_cast<uint8_t>((data >> 16) & 0xFF),
-      static_cast<uint8_t>((data >> 8) & 0xFF),
-      static_cast<uint8_t>(data & 0xFF)
-  };
+  uint8_t buf[4] = {static_cast<uint8_t>(data >> 24), static_cast<uint8_t>((data >> 16) & 0xFF),
+                    static_cast<uint8_t>((data >> 8) & 0xFF), static_cast<uint8_t>(data & 0xFF)};
   return COMPONENT->write_register16(index, buf, 4) == esphome::i2c::ERROR_OK ? 0 : 1;
 }
 
@@ -51,10 +48,8 @@ uint8_t VL53L4CD_RdDWord(Dev_t dev, uint16_t index, uint32_t *pdata) {
   if (COMPONENT->read_register16(index, buf, 4) != esphome::i2c::ERROR_OK) {
     return 1;
   }
-  *pdata = (static_cast<uint32_t>(buf[0]) << 24) |
-           (static_cast<uint32_t>(buf[1]) << 16) |
-           (static_cast<uint32_t>(buf[2]) << 8) |
-           buf[3];
+  *pdata = (static_cast<uint32_t>(buf[0]) << 24) | (static_cast<uint32_t>(buf[1]) << 16) |
+           (static_cast<uint32_t>(buf[2]) << 8) | buf[3];
   return 0;
 }
 
@@ -66,4 +61,4 @@ uint8_t VL53L4CD_WaitMs(Dev_t dev, uint32_t TimeMs) {
   return 0;
 }
 
-} // extern "C"
+}  // extern "C"

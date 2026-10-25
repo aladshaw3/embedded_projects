@@ -8,7 +8,7 @@ DEPENDENCIES = ["i2c"]
 # Define the namespace
 vl53l4cd_ns = cg.esphome_ns.namespace("vl53l4cd")
 
-# Link to the C++ class. 
+# Link to the C++ class.
 # Because the namespace is "vl53l4cd", ESPHome will automatically generate '#include "vl53l4cd.h"' during compile.
 VL53L4CDComponent = vl53l4cd_ns.class_(
     "VL53L4CDComponent", cg.PollingComponent, i2c.I2CDevice, sensor.Sensor
@@ -25,7 +25,7 @@ CONFIG_SCHEMA = sensor.sensor_schema(
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    
+
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
     await i2c.register_i2c_device(var, config)

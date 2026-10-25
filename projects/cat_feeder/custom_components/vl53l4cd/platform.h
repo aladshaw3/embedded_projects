@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 // Define Dev_t as a generic pointer to pass the ESPHome component reference
-typedef void* Dev_t;
+typedef void *Dev_t;
 
 uint8_t VL53L4CD_WrByte(Dev_t dev, uint16_t index, uint8_t data);
 uint8_t VL53L4CD_WrWord(Dev_t dev, uint16_t index, uint16_t data);

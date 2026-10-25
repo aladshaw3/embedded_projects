@@ -16,3 +16,4 @@ ignore:
   - projects/.cmake-format.py
   - projects/UnitTests/Build
   - projects/StaticCodeAnalysis/Build
+  - projects/cat_feeder/custom_components/vl53l4cd

@@ -50,4 +50,3 @@ async def to_code(config):
             disp = cg.new_Pvariable(conf[CONF_ID])
             await i2c.register_i2c_device(disp, conf)
             cg.add(var.add_secondary_display(disp))
-

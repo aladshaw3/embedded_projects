@@ -1,12 +1,12 @@
 #pragma once
-#include "esphome/core/component.h"
-#include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
+#include "esphome/components/sensor/sensor.h"
 #include "esphome/core/application.h"
+#include "esphome/core/component.h"
 
 extern "C" {
-  #include "platform.h"
-  #include "VL53L4CD_api.h"
+#include "VL53L4CD_api.h"
+#include "platform.h"
 }
 
 namespace esphome {
@@ -68,7 +68,7 @@ class VL53L4CDComponent : public PollingComponent, public i2c::I2CDevice, public
 
       if (results.range_status == 0) {
         float distance_m = results.distance_mm / 1000.0f;
-        ESP_LOGI(TAG, "Distance: %.3f m (%u mm)", distance_m, (unsigned int) results.distance_mm);
+        ESP_LOGI(TAG, "Distance: %.3f m (%u mm)", distance_m, (unsigned int)results.distance_mm);
         this->publish_state(distance_m);
       }
     }

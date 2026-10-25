@@ -20,7 +20,7 @@ repos:
     hooks:
       - id: cpplint
         args: ["--verbose=0", --filter=-readability/fn_size]
-        exclude: ^libraries/
+        exclude: '^libraries/|^projects/cat_feeder/custom_components/vl53l4cd/'
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     # We use v0.6.11 instead of the latest v0.6.13 because of the following issue:
     # https://github.com/cheshirekow/cmake_format/issues/240

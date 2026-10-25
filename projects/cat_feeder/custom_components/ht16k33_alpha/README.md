@@ -9,7 +9,7 @@ You can extend the display across multiple units.
 
 Example:
 ```yaml
-i2c:    
+i2c:
   sda: D0
   scl: D1
 
@@ -39,4 +39,3 @@ display:
 `scroll_delay:` is the number (float, minimum 1) of `scroll_speed` cycles to wait at the beginning before starting to scroll, default 3
 
 `secondary_display:` is a list of i2c devices where `address:` is required and `i2c_id:` is optional unless there is more than one i2c bus.
-

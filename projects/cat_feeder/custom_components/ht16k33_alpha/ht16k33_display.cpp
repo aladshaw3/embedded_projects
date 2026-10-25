@@ -1,11 +1,12 @@
-#include "esphome/core/log.h"
+#include "ht16k33_display.h"
+
 #include "esphome/core/hal.h"
 #include "esphome/core/helpers.h"
-#include "ht16k33_display.h"
+#include "esphome/core/log.h"
 #include "font.h"
 
 #ifndef USE_ESP8266
-  #define pgm_read_word(s) (*s)
+#define pgm_read_word(s) (*s)
 #endif
 
 namespace esphome {
@@ -29,15 +30,12 @@ void HT16K33AlphaDisplay::setup() {
 }
 
 void HT16K33AlphaDisplay::loop() {
-  unsigned long now = millis();
+  uint32_t now = millis();
   int numc = this->displays_.size() * 8;
   int len = this->buffer_.size();
-  if (!this->scroll_ || (len <= numc))
-    return;
-  if ((this->offset_ == 0) && (now - this->last_scroll_ < this->scroll_delay_))
-    return;
-  if ((!this->continuous_ && (this->offset_ + numc >= len)) ||
-      (this->continuous_ && (this->offset_ > len - 2))) {
+  if (!this->scroll_ || (len <= numc)) return;
+  if ((this->offset_ == 0) && (now - this->last_scroll_ < this->scroll_delay_)) return;
+  if ((!this->continuous_ && (this->offset_ + numc >= len)) || (this->continuous_ && (this->offset_ > len - 2))) {
     if (this->continuous_ || (now - this->last_scroll_ >= this->scroll_dwell_)) {
       this->offset_ = 0;
       this->last_scroll_ = now;
@@ -55,13 +53,17 @@ float HT16K33AlphaDisplay::get_setup_priority() const { return setup_priority::P
 void HT16K33AlphaDisplay::display_() {
   int numc = this->displays_.size() * 8;
   int len = this->buffer_.size();
-  uint8_t data[numc];
+  /**
+      Don't do this
+
+      \todo revisit this approach
+  */
+  uint8_t data[numc];  // NOLINT
   memset(data, 0, numc);
   int pos = this->offset_;
   for (int i = 0; i < numc; i++, pos++) {
     if (pos >= len) {
-      if (!this->continuous_)
-        break;
+      if (!this->continuous_) break;
       pos %= len;
     }
     data[i] = this->buffer_[pos];
@@ -87,11 +89,9 @@ void HT16K33AlphaDisplay::update() {
 }
 
 void HT16K33AlphaDisplay::set_brightness(float level) {
-  int val = (int) round(level * 16);
-  if (val < 0)
-    val = 0;
-  if (val > 16)
-    val = 16;
+  int val = static_cast<int>(round(level * 16));
+  if (val < 0) val = 0;
+  if (val > 16) val = 16;
   this->brightness_ = val;
   for (auto *display : this->displays_) {
     if (val == 0) {
@@ -103,11 +103,10 @@ void HT16K33AlphaDisplay::set_brightness(float level) {
   }
 }
 
-float HT16K33AlphaDisplay::get_brightness() {
-  return this->brightness_ / 16.0;
-}
+float HT16K33AlphaDisplay::get_brightness() { return this->brightness_ / 16.0; }
 
 void HT16K33AlphaDisplay::print(const char *str) {
+  // cppcheck-suppress unreadVariable
   uint16_t fontc = 0;
   while (*str != '\0') {
     uint8_t c = *reinterpret_cast<const uint8_t *>(str++);
@@ -133,19 +132,16 @@ void HT16K33AlphaDisplay::printf(const char *format, ...) {
   char buffer[64];
   int ret = vsnprintf(buffer, sizeof(buffer), format, arg);
   va_end(arg);
-  if (ret > 0)
-    this->print(buffer);
+  if (ret > 0) this->print(buffer);
 }
 
 #ifdef USE_TIME
 void HT16K33AlphaDisplay::strftime(const char *format, ESPTime time) {
   char buffer[64];
   size_t ret = time.strftime(buffer, sizeof(buffer), format);
-  if (ret > 0)
-    this->print(buffer);
+  if (ret > 0) this->print(buffer);
 }
 #endif
 
 }  // namespace ht16k33_alpha
 }  // namespace esphome
-

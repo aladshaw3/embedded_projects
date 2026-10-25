@@ -1,11 +1,11 @@
 #pragma once
 
-#include "esphome/core/component.h"
-#include "esphome/core/automation.h"
-#include "esphome/components/sensor/sensor.h"
-#include "esphome/components/i2c/i2c.h"
-
 #include <cinttypes>
+
+#include "esphome/components/i2c/i2c.h"
+#include "esphome/components/sensor/sensor.h"
+#include "esphome/core/automation.h"
+#include "esphome/core/component.h"
 
 namespace esphome {
 namespace nau7802_fixed {
@@ -65,6 +65,7 @@ class NAU7802Sensor : public sensor::Sensor, public PollingComponent, public i2c
   float get_setup_priority() const override;
   void update() override;
   uint64_t get_resets() { return this->resets_; }
+
  protected:
   //
   // Internal state
@@ -88,7 +89,7 @@ class NAU7802Sensor : public sensor::Sensor, public PollingComponent, public i2c
   NAU7802Gain gain_;
   uint64_t resets_ = 0;
   void reset();
-  
+
   //
   // Internal Methods
   //
@@ -100,22 +101,23 @@ class NAU7802Sensor : public sensor::Sensor, public PollingComponent, public i2c
   void set_calibration_failure_(bool failed);
 };
 
-template<typename... Ts>
+template <typename... Ts>
 class NAU7802CalbrateExternalOffsetAction : public Action<Ts...>, public Parented<NAU7802Sensor> {
  public:
   void play(const Ts &...x) override { this->parent_->calibrate_external_offset(); }
 };
 
-template<typename... Ts>
+template <typename... Ts>
 class NAU7802CalbrateInternalOffsetAction : public Action<Ts...>, public Parented<NAU7802Sensor> {
  public:
   void play(const Ts &...x) override { this->parent_->calibrate_internal_offset(); }
 };
 
-template<typename... Ts> class NAU7802CalbrateGainAction : public Action<Ts...>, public Parented<NAU7802Sensor> {
+template <typename... Ts>
+class NAU7802CalbrateGainAction : public Action<Ts...>, public Parented<NAU7802Sensor> {
  public:
   void play(const Ts &...x) override { this->parent_->calibrate_gain(); }
 };
 
-}  // namespace nau7802
+}  // namespace nau7802_fixed
 }  // namespace esphome
