@@ -1,0 +1,156 @@
+esphome:
+  name: vl53l4cd-test
+  on_boot:
+    priority: 800.0
+    then:
+      - switch.turn_on: neopixel_power
+
+esp32:
+  board: featheresp32
+  framework:
+    type: arduino
+
+external_components:
+  - source:
+      type: local
+      path: custom_components
+
+logger:
+  level: INFO
+  baud_rate: 115200
+
+# --- Feather ESP32 V2 Power Gate for NeoPixel ---
+switch:
+  - platform: gpio
+    pin: GPIO2
+    id: neopixel_power
+    name: "NeoPixel Power"
+    restore_mode: ALWAYS_ON
+  - platform: gpio
+    pin: GPIO13
+    id: pin_13_state
+    name: "Digital Pin 13"
+    restore_mode: ALWAYS_OFF
+  - platform: gpio
+    pin: GPIO27
+    id: pin_27_state
+    name: "Digital Pin 27"
+    restore_mode: ALWAYS_ON
+
+i2c:
+  sda: GPIO22
+  scl: GPIO20
+  scan: true
+  frequency: 50kHz
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode:
+        input: true
+        pullup: true
+    id: pin_14_state
+    name: "Digital Pin 14"
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode:
+        input: true
+        pullup: false
+    id: pin_32_state
+    name: "Digital Pin 32"
+    on_press:
+      then:
+        - switch.turn_on: pin_13_state
+        - switch.turn_off: pin_27_state
+        - delay: 5s
+        - switch.turn_off: pin_13_state
+        - switch.turn_on: pin_27_state
+
+sensor:
+  - platform: vl53l4cd
+    id: vl53l4cd_distance
+    name: "VL53L4CD Distance"
+    address: 0x29
+    update_interval: 250ms
+
+  - platform: ina2xx_i2c
+    id: my_charge_sensor
+    model: INA228
+    address: 0x40
+    shunt_resistance: 0.010 ohm
+    max_current: 10 A
+    adc_range: 0
+    update_interval: 250ms
+    current:
+      id: ina228_current
+      name: "INA228 Current"
+    bus_voltage:
+      id: ina228_voltage
+      name: "INA228 Bus Voltage"
+    power:
+      id: ina228_power
+      name: "INA228 Power"
+
+  - platform: adc
+    pin: GPIO26
+    id: a0_voltage
+    name: "A0 Analog Voltage"
+    update_interval: 250ms
+    attenuation: 12dB
+
+  - platform: nau7802_fixed
+    id: gross_scale
+    name: "Gross Scale"
+    gain: 1
+    ldo_voltage: "3.0V"
+    update_interval: 3s
+    filters:
+      - sliding_window_moving_average:
+          window_size: 20
+          send_every: 10
+      - calibrate_linear:
+          method: least_squares
+          datapoints:
+            - 1478 -> 0
+            - 3019 -> 831
+            - 4850 -> 1819
+            - 1540 -> 33
+            - 2189 -> 383
+            - 5622 -> 2235
+    unit_of_measurement: g
+
+display:
+  - platform: ht16k33_alpha
+    id: seven_seg
+    address: 0x70
+    update_interval: 250ms
+    lambda: |-
+      if (id(vl53l4cd_distance).has_state()) {
+        int dist_mm = static_cast<int>(id(vl53l4cd_distance).state * 1000.0f);
+        it.printf("%4d", dist_mm);
+      } else {
+        it.print("----");
+      }
+
+light:
+  - platform: esp32_rmt_led_strip
+    pin: GPIO0
+    num_leds: 1
+    channel_colors: GRB  # Replaced deprecated 'rgb_order'
+    chipset: WS2812
+    name: "Feather RGB LED"
+    id: feather_rgb_led
+
+cat_feeder_logic:
+  id: feeder_logic
+  distance_sensor: vl53l4cd_distance
+  bus_voltage_sensor: ina228_voltage
+  current_sensor: ina228_current
+  power_sensor: ina228_power
+  analog_sensor: a0_voltage
+  digital_sensor: pin_14_state
+  weight_sensor: gross_scale
+  display: seven_seg
+  status_light: feather_rgb_led
