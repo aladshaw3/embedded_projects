@@ -136,8 +136,8 @@ if(ENABLE_TEST_COVERAGE
       NAME ${APPLICATION_NAME}_coverage
       EXECUTABLE ${APPLICATION_NAME} -j ${PROCESSOR_COUNT}
       DEPENDENCIES ${APPLICATION_NAME}
-      EXCLUDE "${LIBRARIES_DIR}/*" "/usr/include/c++/*"
-      "${LIBRARIES_DIR}/*"
+      EXCLUDE "${LIBRARIES_DIR}/*" "/usr/include/c++/*" "${SIL_DIR}/ExampleProject/*"
+      "${SIL_DIR}/cat_feeder/unit_tests/*"
       LCOV_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors unused
       GENHTML_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors category)
     # cmake-format: on
@@ -149,6 +149,7 @@ if(ENABLE_TEST_COVERAGE
       EXECUTABLE ${APPLICATION_NAME} -j ${PROCESSOR_COUNT}
       DEPENDENCIES ${APPLICATION_NAME}
       EXCLUDE "/Library/*" "/opt/*" "/Applications/*" "${LIBRARIES_DIR}/*"
+      "${SIL_DIR}/ExampleProject/*" "${SIL_DIR}/cat_feeder/unit_tests/*"
       LCOV_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors unused
       GENHTML_ARGS --ignore-errors inconsistent,inconsistent --ignore-errors category)
     # cmake-format: on
