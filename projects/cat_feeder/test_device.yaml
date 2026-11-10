@@ -4,6 +4,24 @@ esphome:
     priority: 800.0
     then:
       - switch.turn_on: neopixel_power
+      - delay: 100ms # Give power gate time to stabilize
+      # Turn on the onboard NeoPixel
+      - light.turn_on:
+          id: feather_rgb_led
+          brightness: 100%
+          red: 1.0
+          green: 0.0
+          blue: 0.0
+      # Turn on the RGB Indicator with effect
+      - light.turn_on:
+          id: rgb_indicator
+          brightness: 100%
+          effect: "Rainbow Loop"
+      # Turn on the Bowl Lights with effect
+      - light.turn_on:
+          id: bowl_lights
+          brightness: 100%
+          effect: "Pulse 0-50%"
 
 esp32:
   board: featheresp32
@@ -134,14 +152,76 @@ display:
         it.print("----");
       }
 
+output:
+  - platform: ledc
+    pin: GPIO33
+    id: red_output
+  - platform: ledc
+    pin: GPIO4
+    id: green_output
+  - platform: ledc
+    pin: GPIO25
+    id: blue_output
+  - platform: ledc
+    pin: GPIO15
+    id: illum_output
+
 light:
   - platform: esp32_rmt_led_strip
     pin: GPIO0
     num_leds: 1
-    channel_colors: GRB  # Replaced deprecated 'rgb_order'
     chipset: WS2812
+    channel_colors: GRB
     name: "Feather RGB LED"
     id: feather_rgb_led
+    restore_mode: ALWAYS_ON
+
+  - platform: rgb
+    red: red_output
+    green: green_output
+    blue: blue_output
+    name: "RGB Indicator"
+    id: rgb_indicator
+    restore_mode: ALWAYS_ON
+    effects:
+      - lambda:
+          name: "Rainbow Loop"
+          update_interval: 50ms
+          lambda: |-
+            static float hue = 0.0;
+            hue += 2.0f;
+            if (hue >= 360.0f) hue = 0.0f;
+
+            float r = 0.0f, g = 0.0f, b = 0.0f;
+            // Pass raw hue (0..360), NOT hue / 360
+            hsv_to_rgb(hue, 1.0f, 1.0f, r, g, b);
+
+            auto call = id(rgb_indicator).make_call();
+            call.set_rgb(r, g, b);
+            call.set_transition_length(0);
+            call.perform();
+
+  - platform: monochromatic
+    output: illum_output
+    name: "Bowl Lights"
+    id: bowl_lights
+    restore_mode: ALWAYS_ON
+    effects:
+      - lambda:
+          name: "Pulse 0-50%"
+          update_interval: 16ms
+          lambda: |-
+            float time = millis() / 1000.0;
+            float speed = 2.0;
+            float wave = sin(time * speed);
+            float normalized_wave = (wave + 1.0) / 2.0;
+            float brightness = normalized_wave * 0.5;
+
+            auto call = id(bowl_lights).make_call();
+            call.set_state(true);
+            call.set_brightness(brightness);
+            call.set_transition_length(0);
+            call.perform();
 
 cat_feeder_logic:
   id: feeder_logic
