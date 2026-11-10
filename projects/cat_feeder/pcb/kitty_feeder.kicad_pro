@@ -172,6 +172,7 @@
         {
           "td_allow_use_two_tracks": true,
           "td_curve_segcount": 0,
+          "td_enabled": false,
           "td_height_ratio": 1.0,
           "td_length_ratio": 0.5,
           "td_maxheight": 2.0,
@@ -183,6 +184,7 @@
         {
           "td_allow_use_two_tracks": true,
           "td_curve_segcount": 0,
+          "td_enabled": false,
           "td_height_ratio": 1.0,
           "td_length_ratio": 0.5,
           "td_maxheight": 2.0,
@@ -194,6 +196,7 @@
         {
           "td_allow_use_two_tracks": true,
           "td_curve_segcount": 0,
+          "td_enabled": false,
           "td_height_ratio": 1.0,
           "td_length_ratio": 0.5,
           "td_maxheight": 2.0,
@@ -240,7 +243,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "0.1"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -469,6 +472,7 @@
       "pin_to_pin": "warning",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
+      "same_local_global_power": "warning",
       "similar_label_and_power": "warning",
       "similar_labels": "warning",
       "similar_power": "warning",
@@ -516,8 +520,8 @@
     "meta": {
       "version": 5
     },
-    "net_colors": null,
-    "netclass_assignments": null,
+    "net_colors": {},
+    "netclass_assignments": {},
     "netclass_patterns": []
   },
   "pcbnew": {
@@ -659,15 +663,24 @@
         "filename": "kitty_feeder.kicad_sch",
         "name": "kitty_feeder",
         "uuid": "b2c76033-234e-467f-a64d-fd33cb416b84"
+      },
+      {
+        "filename": "kitty_feeder_no_modules.kicad_sch",
+        "name": "kitty_feeder_no_modules",
+        "uuid": "5e2c3ca4-4db6-4b94-82d8-d1e715283faf"
       }
     ],
-    "used_designators": "INA1,R1-6,FeederMicro1,IC1,LoadCellSensor1,FeederIn1,CurrentMonSignal1,CurrentMonLogic1,J1-2,U1-2,A1",
+    "used_designators": "#PWR1-3,#PWR7-12,#PWR24-25,#PWR122,A1-2,AltPower1-2,C1-2,C4,CurrentMonLogic1,CurrentMonSignal1,D1,FeederIn1,FeederMicro1-2,I2C1-2,IC1,INA1,IO1,J1-2,J5,JP1-3,JP5-7,LED_B_FET1,LED_G_FET1,LED_ILLUM_FET1-4,LED_R_FET1,LEDs1,LoadCellSensor1,Q1-2,R1-13,RXTX1,Scale1-2,Sense1-2,U1-4",
     "variants": []
   },
   "sheets": [
     [
       "b2c76033-234e-467f-a64d-fd33cb416b84",
       "kitty_feeder"
+    ],
+    [
+      "5e2c3ca4-4db6-4b94-82d8-d1e715283faf",
+      "kitty_feeder_no_modules"
     ]
   ],
   "text_variables": {},
