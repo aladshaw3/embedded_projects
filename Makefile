@@ -52,6 +52,7 @@ grab-submodules:
 	git submodule add https://github.com/awdeorio/csvstream.git libraries/csvstream
 	git submodule add https://github.com/aladshaw3/cmake-modules.git libraries/cmake-modules
 	git submodule add https://github.com/ETLCPP/etl.git libraries/etl
+	git submodule add https://github.com/esphome/esphome.git libraries/esphome
 
 .PHONY: environment
 environment:

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "derivatives.h"  // HW testing
 #include "esphome/core/log.h"
 
 namespace esphome {
@@ -26,6 +27,19 @@ void CatFeederLogic::update_logic_() {
   float a0_val = (this->analog_sensor_ && this->analog_sensor_->has_state()) ? this->analog_sensor_->state : 0.0f;
   float weight = (this->weight_sensor_ && this->weight_sensor_->has_state()) ? this->weight_sensor_->state : 0.0f;
 
+  this->volt_buffer_.Push(voltage);
+  this->amps_buffer_.Push(current);
+
+  // --- HW testing: Log derivatives of current and voltage for testing ---
+  float volt_per_ms = 0.0F;
+  float amps_per_ms = 0.0F;
+  if (this->volt_buffer_.Size() >= 3) {
+    volt_per_ms = BDF2Method(this->volt_buffer_[0], this->volt_buffer_[1], this->volt_buffer_[2], 0.250F);
+  }
+  if (this->amps_buffer_.Size() >= 3) {
+    amps_per_ms = BDF2Method(this->amps_buffer_[0], this->amps_buffer_[1], this->amps_buffer_[2], 0.250F);
+  }
+
   // --- NeoPixel Output Logic ---
   if (this->status_light_) {
     float green_brightness = std::min(1.0f, std::max(0.0f, a0_val / 3.3f));
@@ -45,11 +59,16 @@ void CatFeederLogic::update_logic_() {
     float dist_m = this->distance_sensor_->state;
     int dist_mm = static_cast<int>(dist_m * 1000.0f);
 
-    ESP_LOGI(TAG, "Dist: %.3fm (%dmm) | Weight: %.1fg | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s", dist_m,
-             dist_mm, weight, voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
+    ESP_LOGI(TAG,
+             "Dist: %.3fm (%dmm) | Weight: %.1fg | V: %.3fV | I: %.3fA | dV: %.3fV/ms | dI: %.3fA/ms | P: %.3fW | A0: "
+             "%.3fV | D14: %s",
+             dist_m, dist_mm, weight, voltage, current, power, volt_per_ms, amps_per_ms, a0_val,
+             d14_val ? "HIGH" : "LOW");
   } else {
-    ESP_LOGI(TAG, "Dist: [Wait] | Weight: %.1fg | V: %.3fV | I: %.3fA | P: %.3fW | A0: %.3fV | D14: %s", weight,
-             voltage, current, power, a0_val, d14_val ? "HIGH" : "LOW");
+    ESP_LOGI(TAG,
+             "Dist: [Wait] | Weight: %.1fg | V: %.3fV | I: %.3fA | dV: %.3fV/ms | dI: %.3fA/ms | P: %.3fW | A0: %.3fV "
+             "| D14: %s",
+             weight, voltage, current, volt_per_ms, amps_per_ms, power, a0_val, d14_val ? "HIGH" : "LOW");
   }
 }
 

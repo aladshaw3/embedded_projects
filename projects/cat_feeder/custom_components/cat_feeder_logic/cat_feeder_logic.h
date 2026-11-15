@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ht16k33_alpha/ht16k33_display.h"
+#include "circular_buffer.h"  // HW testing
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/light/light_state.h"
 #include "esphome/components/sensor/sensor.h"
@@ -37,6 +38,10 @@ class CatFeederLogic : public Component {
 
   uint32_t last_update_{0};
   void update_logic_();
+
+  // HW testing only
+  CircularBuffer<float, 3> volt_buffer_;
+  CircularBuffer<float, 3> amps_buffer_;
 };
 
 }  // namespace cat_feeder_logic
