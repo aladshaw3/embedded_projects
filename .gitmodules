@@ -13,3 +13,6 @@
 [submodule "libraries/cmake-modules"]
 	path = libraries/cmake-modules
 	url = https://github.com/aladshaw3/cmake-modules.git
+[submodule "libraries/esphome"]
+	path = libraries/esphome
+	url = https://github.com/esphome/esphome.git
