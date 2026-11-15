@@ -53,6 +53,8 @@ TEST(TestCircularBuffer, BasicUsage) {
   EXPECT_EQ(cb_data[1], 3);
   EXPECT_EQ(cb_data[2], 2);
 
+  EXPECT_EQ(cb_data.Average(), (2 + 3 + 4) / 3);
+
   EXPECT_EQ(cb_data[-1], 2);  // pythonic!
   EXPECT_EQ(cb_data[-2], 3);  // yahoo!
   EXPECT_EQ(cb_data[-3], 4);  // mathmatical!
