@@ -21,6 +21,7 @@ MotorStateTracker::MotorStateTracker() {
   this->amps_per_ms_threshold_ = 0.0F;
   this->delta_time_ = 1.0F;
   this->is_setup_ = false;
+  this->is_ready_ = false;
 }
 
 void MotorStateTracker::SetThresholds(float volt_per_ms, float amps_per_ms, float delta_time) {
@@ -47,12 +48,17 @@ void MotorStateTracker::SetThresholds(float volt_per_ms, float amps_per_ms, floa
 }
 
 void MotorStateTracker::IngestReadings(float voltage, float amperage) {
+  // If we are not setup yet, don't ingest info
+  if (!this->is_setup_) {
+    return;
+  }
   // If buffers are not ready, don't start doing the slope calculations yet
   if (this->past_voltage_.Size() < kHistoryBufferSize && this->past_current_.Size() < kHistoryBufferSize) {
     this->past_voltage_.Push(voltage);
     this->past_current_.Push(amperage);
     return;
   }
+  this->is_ready_ = true;
 
   // If we are here, that means the buffers are full and we can calculate slopes with the new info
   /// \todo create a private helper function to reduce copy-paste here since we do the same op for volt & current
@@ -100,7 +106,9 @@ float MotorStateTracker::CalculateAvgVolts() const { return this->on_voltage_.Av
 
 float MotorStateTracker::CalculateAvgCurrent() const { return this->on_current_.Average(); }
 
-bool MotorStateTracker::IsReady() const { return this->is_setup_; }
+bool MotorStateTracker::IsSetup() const { return this->is_setup_; }
+
+bool MotorStateTracker::IsReady() const { return this->is_ready_; }
 
 }  // namespace cat_feeder_logic
 }  // namespace esphome

@@ -60,6 +60,9 @@ class MotorStateTracker {
   float CalculateAvgCurrent() const;
 
   /// Return if we are setup or not
+  bool IsSetup() const;
+
+  /// Return if we are ready or not
   bool IsReady() const;
 
  private:
@@ -81,7 +84,8 @@ class MotorStateTracker {
   float volt_per_ms_threshold_;  ///< Threshold above which we assert a state change
   float amps_per_ms_threshold_;  ///< Threshold above which we assert a state change
   float delta_time_;             ///< Run rate of the algorithm (assuming no jitter)
-  bool is_setup_;                ///< Boolean state of the algorithm (set to true after SetThresholds() called)
+  bool is_setup_;                ///< Boolean state of the setup for the algorithm
+  bool is_ready_;                ///< Boolean state of the readiness of the buffers
 };
 
 }  // namespace cat_feeder_logic
