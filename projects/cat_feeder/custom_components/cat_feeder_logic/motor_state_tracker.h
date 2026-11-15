@@ -31,6 +31,7 @@ namespace cat_feeder_logic {
 
     \todo Use data from HW testing to update the algorithm and create an integrated
     system test with a CSV data stream. Update rate 250 ms. Filter cutoff freq 0.5 Hz.
+    Voltage is Down when Current is Up. Fix logic for this.
 */
 class MotorStateTracker {
  public:
