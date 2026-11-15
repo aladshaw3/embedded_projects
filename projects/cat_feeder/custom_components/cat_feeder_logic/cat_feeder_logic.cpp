@@ -3,8 +3,8 @@
 #include <algorithm>
 
 #include "derivatives.h"  // HW testing
-#include "low_pass_filter.h"
 #include "esphome/core/log.h"
+#include "low_pass_filter.h"
 
 namespace esphome {
 namespace cat_feeder_logic {
@@ -14,8 +14,8 @@ static const char *const TAG = "cat_feeder_logic";
 void CatFeederLogic::loop() {
   uint32_t now = millis();
   if (this->last_update_ == 0U) {
-    this->volt_.SetInitialValues(0.0F, 2.5);
-    this->amps_.SetInitialValues(0.0F, 2.5);
+    this->volt_.SetInitialValues(0.0F, 0.5);
+    this->amps_.SetInitialValues(0.0F, 0.5);
   }
   // Allow time for signals to stabilize
   if (this->last_update_ >= 5000U) {
@@ -31,10 +31,13 @@ void CatFeederLogic::update_logic_() {
   float voltage =
       (this->bus_voltage_sensor_ && this->bus_voltage_sensor_->has_state()) ? this->bus_voltage_sensor_->state : 0.0f;
   float current = (this->current_sensor_ && this->current_sensor_->has_state()) ? this->current_sensor_->state : 0.0f;
-  float power = (this->power_sensor_ && this->power_sensor_->has_state()) ? this->power_sensor_->state : 0.0f;
+  [[maybe_unused]] float power =
+      (this->power_sensor_ && this->power_sensor_->has_state()) ? this->power_sensor_->state : 0.0f;
   bool d14_val = (this->digital_sensor_ && this->digital_sensor_->has_state()) ? this->digital_sensor_->state : false;
-  float a0_val = (this->analog_sensor_ && this->analog_sensor_->has_state()) ? this->analog_sensor_->state : 0.0f;
-  float weight = (this->weight_sensor_ && this->weight_sensor_->has_state()) ? this->weight_sensor_->state : 0.0f;
+  [[maybe_unused]] float a0_val =
+      (this->analog_sensor_ && this->analog_sensor_->has_state()) ? this->analog_sensor_->state : 0.0f;
+  [[maybe_unused]] float weight =
+      (this->weight_sensor_ && this->weight_sensor_->has_state()) ? this->weight_sensor_->state : 0.0f;
 
   voltage = this->volt_.Filter(voltage, 0.250F);
   current = this->amps_.Filter(current, 0.250F);
@@ -69,10 +72,11 @@ void CatFeederLogic::update_logic_() {
   // --- Logging and Display Formatting ---
   if (this->distance_sensor_ && this->distance_sensor_->has_state()) {
     float dist_m = this->distance_sensor_->state;
-    int dist_mm = static_cast<int>(dist_m * 1000.0f);
+    [[maybe_unused]] int dist_mm = static_cast<int>(dist_m * 1000.0f);
     /**
     ESP_LOGI(TAG,
-             "Dist: %.3fm (%dmm) | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW | A0: "
+             "Dist: %.3fm (%dmm) | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW |
+    A0: "
              "%.3fV | D14: %s",
              dist_m, dist_mm, weight, voltage, current, volt_per_ms, amps_per_ms, power, a0_val,
              d14_val ? "HIGH" : "LOW");
@@ -81,7 +85,8 @@ void CatFeederLogic::update_logic_() {
   } else {
     /**
     ESP_LOGI(TAG,
-             "Dist: [Wait] | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW | A0: %.3fV "
+             "Dist: [Wait] | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW | A0:
+    %.3fV "
              "| D14: %s",
              weight, voltage, current, volt_per_ms, amps_per_ms, power, a0_val, d14_val ? "HIGH" : "LOW");
     */

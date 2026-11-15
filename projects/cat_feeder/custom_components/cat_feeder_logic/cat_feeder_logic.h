@@ -2,11 +2,11 @@
 
 #include "../ht16k33_alpha/ht16k33_display.h"
 #include "circular_buffer.h"  // HW testing
-#include "low_pass_filter.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/light/light_state.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/core/component.h"
+#include "low_pass_filter.h"
 
 namespace esphome {
 namespace cat_feeder_logic {

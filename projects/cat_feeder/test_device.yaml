@@ -82,7 +82,7 @@ sensor:
     shunt_resistance: 0.010 ohm
     max_current: 10 A
     adc_range: 0
-    update_interval: 250ms
+    update_interval: 100ms
     current:
       id: ina228_current
       name: "INA228 Current"

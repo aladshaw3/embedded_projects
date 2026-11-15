@@ -68,7 +68,7 @@ class VL53L4CDComponent : public PollingComponent, public i2c::I2CDevice, public
 
       if (results.range_status == 0) {
         float distance_m = results.distance_mm / 1000.0f;
-        //ESP_LOGI(TAG, "Distance: %.3f m (%u mm)", distance_m, (unsigned int)results.distance_mm);
+        // ESP_LOGI(TAG, "Distance: %.3f m (%u mm)", distance_m, (unsigned int)results.distance_mm);
         this->publish_state(distance_m);
       }
     }

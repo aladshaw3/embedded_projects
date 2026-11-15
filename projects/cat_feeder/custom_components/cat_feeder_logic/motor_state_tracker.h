@@ -28,6 +28,9 @@ namespace cat_feeder_logic {
     \todo Need to do some experiments to quantify what the actual motor looks like.
     Much of this is just theory crafted. Should also keep track of lagging/leading
     voltage/current that could create state disagreement.
+
+    \todo Use data from HW testing to update the algorithm and create an integrated
+    system test with a CSV data stream. Update rate 250 ms. Filter cutoff freq 0.5 Hz.
 */
 class MotorStateTracker {
  public:
