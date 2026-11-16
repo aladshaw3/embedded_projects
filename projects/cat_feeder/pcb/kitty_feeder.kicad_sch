@@ -3923,6 +3923,16 @@
 	)
 	(wire
 		(pts
+			(xy 53.34 129.54) (xy 53.34 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b7ce0e6-e277-4480-b58b-a8c65e1b0323")
+	)
+	(wire
+		(pts
 			(xy 130.81 171.45) (xy 134.62 171.45)
 		)
 		(stroke
@@ -3983,13 +3993,13 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 115.57) (xy 63.5 119.38)
+			(xy 53.34 116.84) (xy 53.34 121.92)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "918b265f-0738-4567-a5a6-7c5bd8412387")
+		(uuid "92f55226-63c7-465b-b86a-96f656d817c0")
 	)
 	(wire
 		(pts
@@ -4591,16 +4601,6 @@
 		)
 		(uuid "07921563-cf08-43e1-a95b-4fe77d3b2614")
 	)
-	(label "GND"
-		(at 63.5 115.57 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "0e019891-0118-4315-a089-94e88cadaed0")
-	)
 	(label "TX"
 		(at 49.53 83.82 180)
 		(effects
@@ -4871,6 +4871,16 @@
 		)
 		(uuid "4b5815bb-b191-4fa6-9a66-02f3d31c0dd7")
 	)
+	(label "GND"
+		(at 53.34 116.84 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "5121ed90-f0ad-45a7-9463-55c8a236a4cc")
+	)
 	(label "TX"
 		(at 134.62 160.02 0)
 		(effects
@@ -4981,16 +4991,6 @@
 		)
 		(uuid "62c2a302-75da-4aa5-91af-cfa4c9d876ab")
 	)
-	(label "FeederBattery+"
-		(at 71.12 140.97 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "6428602a-3c7d-4c9e-a0cb-6649548ecf28")
-	)
 	(label "LED_B"
 		(at 134.62 97.79 0)
 		(effects
@@ -5050,6 +5050,16 @@
 			(justify right bottom)
 		)
 		(uuid "7a7f7164-2088-42a2-93a0-665dcdfe0f27")
+	)
+	(label "GND"
+		(at 71.12 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7b6b5213-1394-4068-a21f-5c362df6a91d")
 	)
 	(label "GND"
 		(at 134.62 154.94 0)
@@ -5150,6 +5160,16 @@
 			(justify left bottom)
 		)
 		(uuid "963aee80-9722-4634-be4a-f3216fc09c96")
+	)
+	(label "FeederBattery+"
+		(at 53.34 134.62 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "9a5781a2-080f-4c5f-b81e-6677724987c5")
 	)
 	(label "FeederLimitSwitch+"
 		(at 134.62 49.53 0)
@@ -5661,7 +5681,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1b5d4c6d-233b-48e7-ba27-143872dd6850")
-		(property "Reference" "A1"
+		(property "Reference" "AdafruitEsp32Feather1"
 			(at 68.1833 101.6 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5804,7 +5824,7 @@
 		(instances
 			(project "kitty_feeder"
 				(path "/b2c76033-234e-467f-a64d-fd33cb416b84"
-					(reference "A1")
+					(reference "AdafruitEsp32Feather1")
 					(unit 1)
 				)
 			)
@@ -5822,7 +5842,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1e01205d-7193-4297-a102-22eeca4c98e0")
-		(property "Reference" "U1"
+		(property "Reference" "VoltageRegulator1"
 			(at 39.37 19.05 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5887,7 +5907,7 @@
 		(instances
 			(project "kitty_feeder"
 				(path "/b2c76033-234e-467f-a64d-fd33cb416b84"
-					(reference "U1")
+					(reference "VoltageRegulator1")
 					(unit 1)
 				)
 			)
@@ -5908,7 +5928,7 @@
 		(property "Reference" "FeederMicro1"
 			(at 125.73 38.1 0)
 			(show_name no)
-			(do_not_autoplace no)
+			(do_not_autoplace yes)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6623,7 +6643,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "78acafce-54a3-40f0-84a3-1b2c34127736")
-		(property "Reference" "C1"
+		(property "Reference" "CAP1"
 			(at 50.8 29.3369 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6687,7 +6707,7 @@
 		(instances
 			(project "kitty_feeder"
 				(path "/b2c76033-234e-467f-a64d-fd33cb416b84"
-					(reference "C1")
+					(reference "CAP1")
 					(unit 1)
 				)
 			)
@@ -7021,6 +7041,88 @@
 			(project "kitty_feeder"
 				(path "/b2c76033-234e-467f-a64d-fd33cb416b84"
 					(reference "AltPower1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 53.34 125.73 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b4fe2849-04d7-421b-8f38-b9a03fbdf939")
+		(property "Reference" "R7"
+			(at 55.88 124.4599 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "R"
+			(at 55.88 126.9999 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P5.08mm_Vertical"
+			(at 55.118 125.73 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 53.34 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "628322eb-b002-4ab8-a14f-2a5bf133169d")
+		)
+		(pin "1"
+			(uuid "69708cbd-4635-4499-a62e-7942e5554968")
+		)
+		(instances
+			(project "kitty_feeder"
+				(path "/b2c76033-234e-467f-a64d-fd33cb416b84"
+					(reference "R7")
 					(unit 1)
 				)
 			)
