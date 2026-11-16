@@ -3332,10 +3332,6 @@
 		(uuid "9ba9fcab-5c97-43f1-af1e-b7bbe17a6ac1")
 	)
 	(no_connect
-		(at 78.74 73.66)
-		(uuid "b1cea974-ccec-44c4-bb53-24d07e0985f5")
-	)
-	(no_connect
 		(at 53.34 66.04)
 		(uuid "b2fe1e82-c98c-4d0e-84e2-9dbe2a0c422b")
 	)
@@ -3530,6 +3526,16 @@
 			(type default)
 		)
 		(uuid "29e1e45e-4146-4479-9017-9195a6f33eda")
+	)
+	(wire
+		(pts
+			(xy 78.74 73.66) (xy 82.55 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2f7aba60-2a53-406d-bc02-c06d69efa458")
 	)
 	(wire
 		(pts
@@ -5220,6 +5226,16 @@
 			(justify right bottom)
 		)
 		(uuid "a9465c88-20c9-4b67-96e1-b6cbb4d8d0af")
+	)
+	(label "FeederLimitSwitch+"
+		(at 82.55 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "aa9afa5e-a11a-40e3-870e-16f9f277bf6e")
 	)
 	(label "LED_G_CONTROL"
 		(at 82.55 76.2 0)
