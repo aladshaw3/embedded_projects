@@ -685,7 +685,7 @@
 		(descr "Through hole straight pin header, 2x04, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x04 2.54mm double row")
 		(property "Reference" "LEDs1"
-			(at -2.787772 3.81 90)
+			(at -3.295772 3.81 90)
 			(layer "F.SilkS")
 			(uuid "5b6eb4ab-d5e7-4543-b349-9f00674801cd")
 			(effects
@@ -1438,7 +1438,7 @@
 		(descr "Through hole straight pin header, 2x04, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x04 2.54mm double row")
 		(property "Reference" "Scale1"
-			(at -2.787772 3.81 90)
+			(at -3.295772 3.81 90)
 			(layer "F.SilkS")
 			(uuid "7121b62f-7855-4e49-a0a9-b755825fd7f5")
 			(effects
@@ -2734,7 +2734,7 @@
 		(descr "Through hole straight pin header, 2x04, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x04 2.54mm double row")
 		(property "Reference" "FeederIn1"
-			(at -2.787772 4.318 90)
+			(at -3.295772 4.318 90)
 			(layer "F.SilkS")
 			(uuid "82a85ebb-7374-4ab5-b7e6-a7f6e213bff4")
 			(effects
@@ -8008,7 +8008,7 @@
 		(descr "Through hole straight pin header, 2x04, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x04 2.54mm double row")
 		(property "Reference" "FeederMicro1"
-			(at -2.787772 3.81 90)
+			(at -3.295772 3.81 90)
 			(layer "F.SilkS")
 			(uuid "c1fbf8a5-25f1-45aa-8b13-2029440687bc")
 			(effects
