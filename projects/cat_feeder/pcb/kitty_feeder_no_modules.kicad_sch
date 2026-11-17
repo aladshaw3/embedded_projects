@@ -1,0 +1,16 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "8fb0d038-9dda-4d32-a061-52aa7c91eb08")
+	(paper "A4")
+	(title_block
+		(title "Kitty Feeder")
+	)
+	(lib_symbols)
+	(sheet_instances
+		(path "/"
+			(page "2")
+		)
+	)
+)
