@@ -8,6 +8,10 @@ Mono Repo for various personal embedded projects with my husband
 This mono repo is strictly just for code development with a lot of boilerplate for helping
 to write unit tests for the code. Does not include build instructions for specific devices.
 
+![FoxyDerg](projects/cat_feeder/pcb/cat_feeder_footprints.pretty/logo_full/original.png)
+
+Artwork by [Aavastt](https://www.instagram.com/aavastt/)
+
 # Getting Started
 
 (1) Initial Setup
