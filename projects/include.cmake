@@ -7,6 +7,7 @@ include(${SIL_DIR}/utilities.cmake)
 # ################ Add other project directories here #####################
 include_directories(${SIL_DIR}/ExampleProject)
 include_directories(${SIL_DIR}/cat_feeder)
+include_directories(${SIL_DIR}/test_utilities)
 
 # including these directories as SYSTEM silences any warnings in these
 # dependencies while building

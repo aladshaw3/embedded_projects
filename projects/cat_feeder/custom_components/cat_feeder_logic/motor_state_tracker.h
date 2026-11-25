@@ -6,6 +6,7 @@
 
 #include "binary_state.h"
 #include "circular_buffer.h"
+#include "low_pass_filter.h"
 
 namespace esphome {
 namespace cat_feeder_logic {
@@ -24,14 +25,6 @@ namespace cat_feeder_logic {
 
     \todo Stats tracking - may want to aggregate average voltage/current readings in
     a more efficient way (single sample update stats, instead of buffer)
-
-    \todo Need to do some experiments to quantify what the actual motor looks like.
-    Much of this is just theory crafted. Should also keep track of lagging/leading
-    voltage/current that could create state disagreement.
-
-    \todo Use data from HW testing to update the algorithm and create an integrated
-    system test with a CSV data stream. Update rate 250 ms. Filter cutoff freq 0.5 Hz.
-    Voltage is Down when Current is Up. Fix logic for this.
 */
 class MotorStateTracker {
  public:
@@ -42,7 +35,7 @@ class MotorStateTracker {
   MotorStateTracker();
 
   /// Initialization
-  void SetThresholds(float volt_per_ms, float amps_per_ms, float delta_time);
+  void Initialize(float volt_per_s, float amps_per_s, float delta_time, float cutoff_freq_hz);
 
   /// Run function
   /// \todo may be useful to add a mechanism to reset the circular buffer
@@ -70,6 +63,10 @@ class MotorStateTracker {
   bool IsReady() const;
 
  private:
+  /// Helper function for up/down states
+  UpDownState DetermineMeasurementState(float now, float old, float older, float threshold,
+                                        UpDownState last_state) const;
+
   // Tracking of past voltages and current are used to estimate the slopes with BDF2
   CircularBuffer<float, kHistoryBufferSize> past_voltage_;  ///< Prior voltage readings
   CircularBuffer<float, kHistoryBufferSize> past_current_;  ///< Prior current readings
@@ -78,6 +75,10 @@ class MotorStateTracker {
   CircularBuffer<float, kAggregateBufferSize> on_voltage_;  ///< Rolling buffer of voltages when motor is on
   CircularBuffer<float, kAggregateBufferSize> on_current_;  ///< Rolling buffer of currents when motor is on
 
+  // Low pass filter for each measurement
+  LowPassFilter voltage_filter_;
+  LowPassFilter amperage_filter_;
+
   // State tracking for each signal - aggregated to agree on a motor state
   UpDownState volt_state_;  ///< Voltage state tracking
   UpDownState curr_state_;  ///< Current state tracking
@@ -85,11 +86,11 @@ class MotorStateTracker {
 
   // Thresholds for determination of slopes that dictate an edge
   /// \note If the waveform is symmetric in rise & fall, then we only need 1 threshold each
-  float volt_per_ms_threshold_;  ///< Threshold above which we assert a state change
-  float amps_per_ms_threshold_;  ///< Threshold above which we assert a state change
-  float delta_time_;             ///< Run rate of the algorithm (assuming no jitter)
-  bool is_setup_;                ///< Boolean state of the setup for the algorithm
-  bool is_ready_;                ///< Boolean state of the readiness of the buffers
+  float volt_per_s_threshold_;  ///< Threshold above which we assert a state change
+  float amps_per_s_threshold_;  ///< Threshold above which we assert a state change
+  float delta_time_;            ///< Run rate of the algorithm in seconds (assuming no jitter)
+  bool is_setup_;               ///< Boolean state of the setup for the algorithm
+  bool is_ready_;               ///< Boolean state of the readiness of the buffers
 };
 
 }  // namespace cat_feeder_logic
