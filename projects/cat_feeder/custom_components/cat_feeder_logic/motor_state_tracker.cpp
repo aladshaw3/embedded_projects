@@ -24,7 +24,7 @@ MotorStateTracker::MotorStateTracker() {
   this->is_ready_ = false;
 }
 
-void MotorStateTracker::SetThresholds(float volt_per_s, float amps_per_s, float delta_time) {
+void MotorStateTracker::Initialize(float volt_per_s, float amps_per_s, float delta_time, float cutoff_freq_hz) {
   // Check for junk
   if (std::isnan(volt_per_s) || std::isinf(volt_per_s) || std::isnan(amps_per_s) || std::isinf(amps_per_s) ||
       std::isnan(delta_time) || std::isinf(delta_time)) {
@@ -41,6 +41,8 @@ void MotorStateTracker::SetThresholds(float volt_per_s, float amps_per_s, float 
   if (delta_time <= 0.1F) {  // NOLINT
     delta_time = 0.1F;       // NOLINT
   }
+  this->voltage_filter_.SetInitialValues(0.0F, cutoff_freq_hz);
+  this->amperage_filter_.SetInitialValues(0.0F, cutoff_freq_hz);
   this->volt_per_s_threshold_ = volt_per_s;
   this->amps_per_s_threshold_ = amps_per_s;
   this->delta_time_ = delta_time;
@@ -52,6 +54,15 @@ void MotorStateTracker::IngestReadings(float voltage, float amperage) {
   if (!this->is_setup_) {
     return;
   }
+  // Start by filtering the raw inputs (if ready, otherwise initialize filter to first observations)
+  if (!this->is_ready_) {
+    this->voltage_filter_.SetInitialValues(voltage, this->voltage_filter_.ReadCutoffFreqHz());
+    this->amperage_filter_.SetInitialValues(amperage, this->amperage_filter_.ReadCutoffFreqHz());
+  } else {
+    voltage = this->voltage_filter_.Filter(voltage, this->delta_time_);
+    amperage = this->amperage_filter_.Filter(amperage, this->delta_time_);
+  }
+
   // If buffers are not ready, don't start doing the slope calculations yet
   if (this->past_voltage_.Size() < kHistoryBufferSize && this->past_current_.Size() < kHistoryBufferSize) {
     this->past_voltage_.Push(voltage);
@@ -87,7 +98,7 @@ void MotorStateTracker::IngestReadings(float voltage, float amperage) {
 }
 
 UpDownState MotorStateTracker::DetermineMeasurementState(float now, float old, float older, float threshold,
-                                                         UpDownState last_state) {
+                                                         UpDownState last_state) const {
   float derivative = BDF2Method(now, old, older, this->delta_time_);
   if (derivative >= threshold) {
     return UpDownState::kUp;

@@ -11,8 +11,6 @@
 namespace test_utilities {
 
 /// \return string name of path to embedded_projects root directory (i.e., repo directory)
-std::string GetProjectRootPathString() {
-  return std::filesystem::current_path().parent_path().parent_path().parent_path().parent_path().string();
-}
+std::string GetProjectRootPathString();
 
 }  // namespace test_utilities
