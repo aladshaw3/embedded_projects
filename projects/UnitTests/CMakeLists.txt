@@ -54,7 +54,8 @@ set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
 
 add_compile_options(
   "-DGTEST"
-  "-fkeep-static-consts")
+  "-fkeep-static-consts"
+  "-fexceptions")
 
 include(CTest)
 include(GoogleTest)
