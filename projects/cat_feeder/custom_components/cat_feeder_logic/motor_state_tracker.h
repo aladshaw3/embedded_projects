@@ -42,7 +42,7 @@ class MotorStateTracker {
   MotorStateTracker();
 
   /// Initialization
-  void SetThresholds(float volt_per_ms, float amps_per_ms, float delta_time);
+  void SetThresholds(float volt_per_s, float amps_per_s, float delta_time);
 
   /// Run function
   /// \todo may be useful to add a mechanism to reset the circular buffer
@@ -70,6 +70,9 @@ class MotorStateTracker {
   bool IsReady() const;
 
  private:
+  /// Helper function for up/down states
+  UpDownState DetermineMeasurementState(float now, float old, float older, float threshold, UpDownState last_state);
+
   // Tracking of past voltages and current are used to estimate the slopes with BDF2
   CircularBuffer<float, kHistoryBufferSize> past_voltage_;  ///< Prior voltage readings
   CircularBuffer<float, kHistoryBufferSize> past_current_;  ///< Prior current readings
@@ -85,11 +88,11 @@ class MotorStateTracker {
 
   // Thresholds for determination of slopes that dictate an edge
   /// \note If the waveform is symmetric in rise & fall, then we only need 1 threshold each
-  float volt_per_ms_threshold_;  ///< Threshold above which we assert a state change
-  float amps_per_ms_threshold_;  ///< Threshold above which we assert a state change
-  float delta_time_;             ///< Run rate of the algorithm (assuming no jitter)
-  bool is_setup_;                ///< Boolean state of the setup for the algorithm
-  bool is_ready_;                ///< Boolean state of the readiness of the buffers
+  float volt_per_s_threshold_;  ///< Threshold above which we assert a state change
+  float amps_per_s_threshold_;  ///< Threshold above which we assert a state change
+  float delta_time_;            ///< Run rate of the algorithm in seconds (assuming no jitter)
+  bool is_setup_;               ///< Boolean state of the setup for the algorithm
+  bool is_ready_;               ///< Boolean state of the readiness of the buffers
 };
 
 }  // namespace cat_feeder_logic

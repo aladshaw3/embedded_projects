@@ -17,32 +17,32 @@ MotorStateTracker::MotorStateTracker() {
   this->volt_state_ = UpDownState::kUnknown;
   this->curr_state_ = UpDownState::kUnknown;
   this->motor_state_ = OnOffState::kUnknown;
-  this->volt_per_ms_threshold_ = 0.0F;
-  this->amps_per_ms_threshold_ = 0.0F;
+  this->volt_per_s_threshold_ = 0.0F;
+  this->amps_per_s_threshold_ = 0.0F;
   this->delta_time_ = 1.0F;
   this->is_setup_ = false;
   this->is_ready_ = false;
 }
 
-void MotorStateTracker::SetThresholds(float volt_per_ms, float amps_per_ms, float delta_time) {
+void MotorStateTracker::SetThresholds(float volt_per_s, float amps_per_s, float delta_time) {
   // Check for junk
-  if (std::isnan(volt_per_ms) || std::isinf(volt_per_ms) || std::isnan(amps_per_ms) || std::isinf(amps_per_ms) ||
+  if (std::isnan(volt_per_s) || std::isinf(volt_per_s) || std::isnan(amps_per_s) || std::isinf(amps_per_s) ||
       std::isnan(delta_time) || std::isinf(delta_time)) {
     return;
   }
   // Check for lower bounds (could provide constants for these)
-  if (volt_per_ms <= 2.0F * std::numeric_limits<float>::epsilon()) {  // NOLINT
-    volt_per_ms = 2.0F * std::numeric_limits<float>::epsilon();       // NOLINT
+  if (volt_per_s <= 2.0F * std::numeric_limits<float>::epsilon()) {  // NOLINT
+    volt_per_s = 2.0F * std::numeric_limits<float>::epsilon();       // NOLINT
   }
-  if (amps_per_ms <= 2.0F * std::numeric_limits<float>::epsilon()) {  // NOLINT
-    amps_per_ms = 2.0F * std::numeric_limits<float>::epsilon();       // NOLINT
+  if (amps_per_s <= 2.0F * std::numeric_limits<float>::epsilon()) {  // NOLINT
+    amps_per_s = 2.0F * std::numeric_limits<float>::epsilon();       // NOLINT
   }
   // Less than 0.1 ms will be lower bound (arbitrary)
   if (delta_time <= 0.1F) {  // NOLINT
     delta_time = 0.1F;       // NOLINT
   }
-  this->volt_per_ms_threshold_ = volt_per_ms;
-  this->amps_per_ms_threshold_ = amps_per_ms;
+  this->volt_per_s_threshold_ = volt_per_s;
+  this->amps_per_s_threshold_ = amps_per_s;
   this->delta_time_ = delta_time;
   this->is_setup_ = true;
 }
@@ -61,27 +61,17 @@ void MotorStateTracker::IngestReadings(float voltage, float amperage) {
   this->is_ready_ = true;
 
   // If we are here, that means the buffers are full and we can calculate slopes with the new info
-  /// \todo create a private helper function to reduce copy-paste here since we do the same op for volt & current
-  float volt_der = BDF2Method(voltage, this->past_voltage_[0], this->past_voltage_[1], this->delta_time_);
-  float amps_der = BDF2Method(amperage, this->past_current_[0], this->past_current_[1], this->delta_time_);
-  if (volt_der >= this->volt_per_ms_threshold_) {
-    this->volt_state_ = UpDownState::kUp;
-  }
-  if (volt_der <= -this->volt_per_ms_threshold_) {
-    this->volt_state_ = UpDownState::kDown;
-  }
-  if (amps_der >= this->amps_per_ms_threshold_) {
-    this->curr_state_ = UpDownState::kUp;
-  }
-  if (amps_der <= -this->amps_per_ms_threshold_) {
-    this->curr_state_ = UpDownState::kDown;
-  }
+  this->volt_state_ = DetermineMeasurementState(voltage, this->past_voltage_[0], this->past_voltage_[1],
+                                                this->volt_per_s_threshold_, this->volt_state_);
+  this->curr_state_ = DetermineMeasurementState(amperage, this->past_current_[0], this->past_current_[1],
+                                                this->amps_per_s_threshold_, this->curr_state_);
 
   // Use the states of voltage and current to dictate the motor state
-  if (this->volt_state_ == UpDownState::kUp && this->curr_state_ == UpDownState::kUp) {
+  // During use, voltage is expected to be down and current is expected to be up
+  if (this->volt_state_ == UpDownState::kDown && this->curr_state_ == UpDownState::kUp) {
     this->motor_state_ = OnOffState::kOn;
   }
-  if (this->volt_state_ == UpDownState::kDown && this->curr_state_ == UpDownState::kDown) {
+  if (this->volt_state_ == UpDownState::kUp && this->curr_state_ == UpDownState::kDown) {
     this->motor_state_ = OnOffState::kOff;
   }
 
@@ -94,6 +84,18 @@ void MotorStateTracker::IngestReadings(float voltage, float amperage) {
   // Update buffers as last step
   this->past_voltage_.Push(voltage);
   this->past_current_.Push(amperage);
+}
+
+UpDownState MotorStateTracker::DetermineMeasurementState(float now, float old, float older, float threshold,
+                                                         UpDownState last_state) {
+  float derivative = BDF2Method(now, old, older, this->delta_time_);
+  if (derivative >= threshold) {
+    return UpDownState::kUp;
+  }
+  if (derivative <= -threshold) {
+    return UpDownState::kDown;
+  }
+  return last_state;
 }
 
 OnOffState MotorStateTracker::GetMotorState() const { return this->motor_state_; }

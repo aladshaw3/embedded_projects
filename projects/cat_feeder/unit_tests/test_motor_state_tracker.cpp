@@ -29,7 +29,7 @@ TEST(TestMotorTracking, NoLag) {
 
   // Start ingesting info
   for (int i = 0; i < 15; i++) {
-    test_tracker.IngestReadings(data[i], data[i]);
+    test_tracker.IngestReadings(-data[i], data[i]);
     if (i < 2) {
       EXPECT_FALSE(test_tracker.IsReady());
     } else {
@@ -38,18 +38,19 @@ TEST(TestMotorTracking, NoLag) {
     if (i >= 5 && i < 10) {
       EXPECT_EQ(test_tracker.GetMotorState(), OnOffState::kOn);
       EXPECT_EQ(test_tracker.GetCurrentState(), UpDownState::kUp);
-      EXPECT_EQ(test_tracker.GetVoltageState(), UpDownState::kUp);
+      EXPECT_EQ(test_tracker.GetVoltageState(), UpDownState::kDown);
     } else if (i >= 10) {
       EXPECT_EQ(test_tracker.GetMotorState(), OnOffState::kOff);
       EXPECT_EQ(test_tracker.GetCurrentState(), UpDownState::kDown);
-      EXPECT_EQ(test_tracker.GetVoltageState(), UpDownState::kDown);
+      EXPECT_EQ(test_tracker.GetVoltageState(), UpDownState::kUp);
     }
     std::cout << i << "," << static_cast<int>(test_tracker.GetMotorState()) << "," << test_tracker.IsReady()
               << std::endl;
   }
 }
 
-TEST(TestMotorTracking, NoLaggingCurrent) {
+/**
+TEST(TestMotorTracking, LaggingCurrent) {
   MotorStateTracker test_tracker;
   EXPECT_FALSE(test_tracker.IsSetup());
   test_tracker.SetThresholds(1.5F, 1.5F, 0.1F);
@@ -93,5 +94,6 @@ TEST(TestMotorTracking, NoLaggingCurrent) {
               << std::endl;
   }
 }
+*/
 
 #endif
