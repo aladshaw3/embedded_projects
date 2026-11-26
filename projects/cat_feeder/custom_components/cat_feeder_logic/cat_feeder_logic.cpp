@@ -70,13 +70,13 @@ void CatFeederLogic::update_logic_() {
   }
 
   // --- Logging and Display Formatting ---
-  if (this->weight_sensor_ && this->weight_sensor_->has_state()) {
-    ESP_LOGI(TAG, "%.6g", weight);
-  }
+  // if (this->weight_sensor_ && this->weight_sensor_->has_state()) {
+  //  ESP_LOGI(TAG, "%.6g", weight);
+  //}
 
-  //if (this->distance_sensor_ && this->distance_sensor_->has_state()) {
-  //  float dist_m = this->distance_sensor_->state;
-  //  [[maybe_unused]] int dist_mm = static_cast<int>(dist_m * 1000.0f);
+  if (this->distance_sensor_ && this->distance_sensor_->has_state()) {
+    float dist_m = this->distance_sensor_->state;
+    [[maybe_unused]] int dist_mm = static_cast<int>(dist_m * 1000.0f);
     /**
     ESP_LOGI(TAG,
              "Dist: %.3fm (%dmm) | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW |
@@ -85,8 +85,8 @@ void CatFeederLogic::update_logic_() {
              dist_m, dist_mm, weight, voltage, current, volt_per_ms, amps_per_ms, power, a0_val,
              d14_val ? "HIGH" : "LOW");
     */
-    //ESP_LOGI(TAG, ", %.6f, %.6f, %.6f, %.6f, %i", voltage, current, volt_per_ms, amps_per_ms, d14_val ? 0 : 1);
-  //} else {
+    ESP_LOGI(TAG, ", %.6f, %.6f, %.6f, %.6f, %i", voltage, current, volt_per_ms, amps_per_ms, d14_val ? 0 : 1);
+  } else {
     /**
     ESP_LOGI(TAG,
              "Dist: [Wait] | Weight: %.1fg | V: %.3f V | I: %.3f A | dV: %.3f V/ms | dI: %.3f A/ms | P: %.3fW | A0:
@@ -94,8 +94,8 @@ void CatFeederLogic::update_logic_() {
              "| D14: %s",
              weight, voltage, current, volt_per_ms, amps_per_ms, power, a0_val, d14_val ? "HIGH" : "LOW");
     */
-    //ESP_LOGI(TAG, ", %.6f, %.6f, %.6f, %.6f, %i", voltage, current, volt_per_ms, amps_per_ms, d14_val ? 0 : 1);
-  //}
+    ESP_LOGI(TAG, ", %.6f, %.6f, %.6f, %.6f, %i", voltage, current, volt_per_ms, amps_per_ms, d14_val ? 0 : 1);
+  }
 }
 
 }  // namespace cat_feeder_logic
