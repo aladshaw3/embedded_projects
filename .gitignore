@@ -4,6 +4,8 @@ projects/StaticCodeAnalysis/Build
 documentation/api_docs/html/*
 documentation/api_docs/latex/*
 documentation/doc_build_logs.log
+*/__pycache__/*
+*.pyc
 
 # Prerequisites
 *.d
