@@ -37,9 +37,9 @@ void MotorStateTracker::Initialize(float volt_per_s, float amps_per_s, float del
   if (amps_per_s <= 2.0F * std::numeric_limits<float>::epsilon()) {  // NOLINT
     amps_per_s = 2.0F * std::numeric_limits<float>::epsilon();       // NOLINT
   }
-  // Less than 0.1 ms will be lower bound (arbitrary)
-  if (delta_time <= 0.1F) {  // NOLINT
-    delta_time = 0.1F;       // NOLINT
+  // Less than 0.001 s will be lower bound (arbitrary)
+  if (delta_time <= 0.001F) {  // NOLINT
+    delta_time = 0.001F;       // NOLINT
   }
   this->voltage_filter_.SetInitialValues(0.0F, cutoff_freq_hz);
   this->amperage_filter_.SetInitialValues(0.0F, cutoff_freq_hz);
