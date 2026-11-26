@@ -10,12 +10,7 @@
 
 #include "custom_components/cat_feeder_logic/battery_monitor.h"
 
-// Include some data handling test utilities
-#include "data_handling/csv_map.hpp"
-#include "data_handling/file_paths.hpp"
-
 using namespace esphome::cat_feeder_logic;
-using namespace test_utilities;
 
 TEST(TestBatteryMonitor, BasicMonitoring) {
   BatteryMonitor test_monitor;

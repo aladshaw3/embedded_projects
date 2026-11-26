@@ -70,6 +70,10 @@ void CatFeederLogic::update_logic_() {
   }
 
   // --- Logging and Display Formatting ---
+  // if (this->weight_sensor_ && this->weight_sensor_->has_state()) {
+  //  ESP_LOGI(TAG, "%.6g", weight);
+  //}
+
   if (this->distance_sensor_ && this->distance_sensor_->has_state()) {
     float dist_m = this->distance_sensor_->state;
     [[maybe_unused]] int dist_mm = static_cast<int>(dist_m * 1000.0f);

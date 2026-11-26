@@ -38,19 +38,26 @@ Type: uint8
 Unit: Number
 
 ## gross_scale
-### raw_weight
+### raw_adc_voltage
 Type: int32
-Unit: grams
-### calibration_data
-Type: array[pair[int32,int32]]
-### empty_weight
+Unit: volts
+### calibration_params (slope, intercept)
+Type: pair[float,float]
+### floor
 Type: int32
-Unit: grams
-This parameter is the weight of the unit without any food
-### full_weight
+Unit: volts
+The lowest raw reading that is valid
+### ceiling
 Type: int32
-Unit: grams
-This parameter is the weight of the unit completely full of food
+Unit: volts
+The highest raw reading that is valid
+### empty_feeder_grams
+Type: float
+### full_feeder_grams
+Type: float
+### ideal_single_cycle_grams
+Type: float
+The weight of 1/8th of a cup of cat food
 
 ## clock
 ### seconds
@@ -89,9 +96,9 @@ Unit: grams
 ### percentage_full
 Type: int32
 Unit: grams
-### days_of_food_left
+### cycles_of_food_left
 Type: int32
-Unit: days
+Unit: unitless
 
 ## motor_sensor
 This is to keep track of the current and voltage used for feedings over time
